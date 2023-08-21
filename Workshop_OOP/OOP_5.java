@@ -1,5 +1,5 @@
+// Show reverse number
 import java.util.Scanner;
-
 class OOP_5 {
     public static int power(int base, int pow) {
         int i;
