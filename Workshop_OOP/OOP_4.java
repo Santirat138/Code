@@ -8,11 +8,11 @@ class splitBox{
     int i;
     void setSize(int digitIn){
         digiSize=digitIn;
+        arrayNum=new int[digiSize];
     }
     void splitNum(){
         for(i=0;i<digiSize;i++){
             extNum=newNum%10;
-            arrayNum=new int[digiSize];
             arrayNum[i]=extNum;
             newNum=newNum/10;
             System.out.printf("Number : %d\n", arrayNum[i]);
