@@ -10,9 +10,17 @@ struct dataNode{
     int amount=0;
 
 }info;
+// Node
 void addHead(node **headRef, node **tailRef, int newNum);
 void connectNode(node *node1, node *node2);
+void disConnectNode(node *node1, node *node2);
 void showAll(node **headRef, node **tailRef);
+void deleteHead(node **headRef);
+void sortMinMax(node **headRef, node **tailRef);
+
+// stack
+void push(node **topRef, int newNum);
+//-----------------Main-----------------
 int main(){
     node *head=NULL;
     node **headR=&head;
@@ -24,22 +32,27 @@ int main(){
     }
     showAll(headR, tailR);
 }
+//-----------------Main-----------------
+// Node
 void addHead(node **headRef, node **tailRef, int newNum){
     node *newNode=new node();
     newNode->num=newNum;
-    if(*headRef==NULL){
-        *headRef=newNode;
-        *tailRef=newNode;
+    if(*headRef!=NULL){
+        connectNode(newNode, *headRef);
     }
     else{
-        connectNode(newNode, *headRef);
-        *headRef=newNode;
+        *tailRef=newNode;
     }
+    *headRef=newNode;
     info.amount++;
 }
 void connectNode(node *node1, node *node2){
     node1->next=node2;
     node2->prev=node1;
+}
+void disConnectNode(node *node1, node *node2){
+    node1->next=NULL;
+    node2->prev=NULL;
 }
 void showAll(node **headRef, node **tailRef){
     if((*headRef==NULL)||(*tailRef==NULL)){
@@ -60,4 +73,23 @@ void showAll(node **headRef, node **tailRef){
         }
         cout<<showNode->num<<endl;
     }
+}
+void deleteHead(node **headRef){
+    node *delNode=*headRef;
+    *headRef=(*headRef)->next;
+    disConnectNode(delNode, *headRef);
+    info.amount--;
+}
+void sortMinMax(node **headRef, node **tailRef){
+
+}
+// Stack
+void push(node **topRef, int newNum){
+    node *newNode=new node();
+    newNode->num=newNum;
+    if(*topRef!=NULL){
+        newNode->next=*topRef;
+    }
+    *topRef=newNode;
+    info.amount++;
 }
