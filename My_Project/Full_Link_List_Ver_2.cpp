@@ -25,7 +25,6 @@ node *pop(node **topRef);
 void enqueue(node **firstRef, node **lastRef, int newNum);
 node *dequeue(node **firstRef);
 
-// Stack, Queue
 void check(node **firstNode, node **lastNode);
 //-----------------Start main-----------------
 int main(){
