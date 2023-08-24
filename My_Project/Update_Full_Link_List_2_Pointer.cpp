@@ -33,21 +33,32 @@ struct infoNode findMinNum(node **headRef);  // Show position
 struct infoNode sumNode(node **headRef);
 void bbSort(node **headRef);
 struct infoNode avgNum(node **headRef);
-// void linSort
+// Stack
+void push(node **topRef, int newNum);
+node *pop(node **topRef);
 int main(){
     node *head=NULL;
     node **head_ref=&head;
     node *tail=NULL;
     node **tail_ref=&tail;
+    node *top=NULL;
+    node **top_ref=&top;
     int i;
     for(i=0;i<5;i++){
         addAtHead(head_ref, tail_ref, i);
     }
-
     showAll(head_ref, tail_ref);
     bbSort(head_ref);
     showAll(head_ref, tail_ref);
-
+    cout<<endl<<endl<<"Stack"<<endl;
+    for(i=6;i<11;i++){
+        push(top_ref, i);
+    }
+    node *test;
+    while(*top_ref!=NULL){
+        test=pop(top_ref);
+        cout<<test->num<<" ";
+    }
 }
 void addAtHead(node **headRef, node **tailRef, int newNum){
     if(isNumTrue(headRef, newNum)){
@@ -524,4 +535,23 @@ struct infoNode avgNum(node **headRef){
     number=sumNode(headRef);
     number.avg=number.sum/amount;
     return number;
+}
+// Stack
+void push(node **topRef, int newNum){
+    node *newNode=new node();
+    newNode->num=newNum;
+    if(*topRef!=NULL){
+        newNode->next=*topRef;
+    }
+    *topRef=newNode;
+}
+node *pop(node **topRef){
+    if(*topRef!=NULL){
+        node *temp=*topRef;
+        *topRef=(*topRef)->next;
+        return temp;
+    }
+    else{
+        return NULL;
+    }
 }
