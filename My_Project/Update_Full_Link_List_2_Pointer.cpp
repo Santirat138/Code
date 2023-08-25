@@ -36,6 +36,8 @@ struct infoNode avgNum(node **headRef);
 // Stack
 void push(node **topRef, int newNum);
 node *pop(node **topRef);
+// Queue
+void enqueue(node **firstRef, node **lastRef, int newNum);
 int main(){
     node *head=NULL;
     node **head_ref=&head;
@@ -43,6 +45,10 @@ int main(){
     node **tail_ref=&tail;
     node *top=NULL;
     node **top_ref=&top;
+    node *first=NULL;
+    node **first_ref=&first;
+    node *last=NULL;
+    node **last_ref=&last;
     int i;
     for(i=0;i<5;i++){
         addAtHead(head_ref, tail_ref, i);
@@ -549,6 +555,29 @@ node *pop(node **topRef){
     if(*topRef!=NULL){
         node *temp=*topRef;
         *topRef=(*topRef)->next;
+        return temp;
+    }
+    else{
+        return NULL;
+    }
+}
+// queue
+void enqueue(node **firstRef, node **lastRef, int newNum){
+    node *newNode=new node();
+    newNode->num=newNum;
+    if((*firstRef!=NULL)&&(*lastRef!=NULL)){
+        (*lastRef)->next=newNode;
+    }
+    else{
+        *firstRef=newNode;
+    }
+    *lastRef=newNode;
+}
+node *dequeue(node **firstRef, node **lastRef){
+    if((*firstRef!=NULL)&&(*lastRef!=NULL)){
+        node *temp=*firstRef;
+        *firstRef=(*firstRef)->next;
+        temp->next=NULL;
         return temp;
     }
     else{
