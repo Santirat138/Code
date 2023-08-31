@@ -10,17 +10,25 @@ node **headR=&head;
 
 int main(){
     char chIn;
+    int newNumIn;
+    int numPos;
     do{
         cout<<"Enter char : ";
         cin>>chIn;
-        if(chIn=='a'){
-            // Insert after number.
-        }
-        else if(chIn=='i'){
+        if(chIn=='i'){
             // Insert before number.
+            cout<<"Enter new number and insert before number : ";
+            cin>>newNumIn>>numPos;
+        }
+        else if(chIn=='a'){
+            // Insert after number.
+            cout<<"Enter new number and insert after number : ";
+            cin>>newNumIn>>numPos;
         }
         else if(chIn=='d'){
             // Delete number.
+            cout<<"Enter number that want to delete : ";
+
         }
     }
     while(chIn!='e');
