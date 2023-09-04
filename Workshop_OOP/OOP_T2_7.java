@@ -3,10 +3,9 @@ public class OOP_T2_7{
     public static void main(String[] args){
         arrayBox boxObj=new arrayBox();
         Scanner input=new Scanner(System.in);
-        int sizeIn;
-        sizeIn=input.nextInt();
-        boxObj.setSize(sizeIn);
-        
+        boxObj.setSize();
+        boxObj.setElement();
+        boxObj.showArray();
     }
 }
 class arrayBox{
@@ -15,9 +14,9 @@ class arrayBox{
     public int[] array;
     public int num;
     Scanner input=new Scanner(System.in);
-    public void setSize(int sizeIn){
+    public void setSize(){
         System.out.println("Enter size of array. ");
-        size=sizeIn;
+        size=input.nextInt();
         array=new int[size];
     }
     public void setElement(){
