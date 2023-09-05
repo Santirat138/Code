@@ -1,5 +1,3 @@
-// Data structure OOP
-// Single link list
 #include<iostream>
 using namespace std;
 class node{
@@ -7,19 +5,12 @@ class node{
         int num;
         node *next;
 };
-class infoNode{
+class info{
     public:
-        int amount;
-        node *currNode=new node();
-        void show(node **headRef){
-            node *showNode=*headRef;
-            while(showNode!=NULL){
-                cout<<showNode->num<<" ";
-                showNode=showNode->next;
-                cout<<endl;
-            }
-        }
-        int calSum(){
+        int amount=0;
+        
+        int calSum(node **headRef){
+            node *currNode=*headRef;
             int sum=0;
             while(currNode!=NULL){
                 sum=sum+currNode->num;
@@ -28,22 +19,24 @@ class infoNode{
             return sum;
         }
 };
-infoNode data;
-void addFirst(node **headRef, int newNum);
+info data;
+void addHead(node **headRef, int newNum);
+void show(node **headRef);
+//------------------ main ------------------
 int main(){
     node *head=NULL;
     node **headR=&head;
-    for(int i=0;i<=5;i++){
-        addFirst(headR, i);
+    info infoNode;
+    int i;
+    for(i=0;i<=5;i++){
+        addHead(headR, i);
     }
-    int sumNode;
-    sumNode=data.calSum();
-    data.show(headR);
-    cout<<data.amount<<endl;
-    cout<<sumNode;
+    show(headR);
+    int totalNum=data.calSum(headR);
+    cout<<totalNum;
 }
-
-void addFirst(node **headRef, int newNum){
+//------------------ main ------------------
+void addHead(node **headRef, int newNum){
     node *newNode=new node();
     newNode->num=newNum;
     if(*headRef!=NULL){
@@ -51,4 +44,12 @@ void addFirst(node **headRef, int newNum){
     }
     *headRef=newNode;
     data.amount++;
+}
+void show(node **headRef){
+    node *showNode=*headRef;
+    while(showNode!=NULL){
+        cout<<showNode->num<<" ";
+        showNode=showNode->next;
+    }
+    cout<<endl;
 }
