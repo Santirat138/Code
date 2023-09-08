@@ -17,7 +17,7 @@ void addAtHead(node **headRef, node **tailRef, int newNum);//
 bool isNumTrue(node **headRef, int targetNum);//
 void showAll(node **headRef, node **tailRef);//
 void connectNode(node *node1, node *node2);//
-node *findNum(node **headRef, int num);
+node *findNum(node **headRef, int num);//
 void deleteNum(node **headRef, node **tailRef, int target);
 node *findPrevNum(node **headRef, int num);
 node *findNextNum(node **headRef, int num);
