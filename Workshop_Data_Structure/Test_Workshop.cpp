@@ -1,304 +1,159 @@
+// A C++ program to demonstrate common Binary Heap Operations
 #include<iostream>
+#include<climits>
 using namespace std;
-class node{
-    public:
-        int num;
-        node *prec;
-        node *next;
+
+// Prototype of a utility function to swap two integers
+void swap(int *x, int *y);
+
+// A class for Min Heap
+class MinHeap
+{
+	int *harr; // pointer to array of elements in heap
+	int capacity; // maximum possible size of min heap
+	int heap_size; // Current number of elements in min heap
+public:
+	// Constructor
+	MinHeap(int capacity);
+
+	// to heapify a subtree with the root at given index
+	void MinHeapify(int );
+
+	int parent(int i) { return (i-1)/2; }
+
+	// to get index of left child of node at index i
+	int left(int i) { return (2*i + 1); }
+
+	// to get index of right child of node at index i
+	int right(int i) { return (2*i + 2); }
+
+	// to extract the root which is the minimum element
+	int extractMin();
+
+	// Decreases key value of key at index i to new_val
+	void decreaseKey(int i, int new_val);
+
+	// Returns the minimum key (key at root) from min heap
+	int getMin() { return harr[0]; }
+
+	// Deletes a key stored at index i
+	void deleteKey(int i);
+
+	// Inserts a new key 'k'
+	void insertKey(int k);
 };
-struct nodeData{
-    int amount=0;
-    int max;
-    int min;
-    double avg=0;
-    int sum=0;
-}info;
-node *nullNode=new node();
-void connectNode(node *node1, node *node2);
-bool isSameNum(node **headRef, int numCheck);
-void addFirst(node **headRef, node **tailRef, int newNum);
-void addLast(node **headRef, node **tailRef, int newNum);
-void showHT(node **headRef, node **tailRef);
-node *findNum(node **headRef, node **tailRef, int target);
-void insertBef(node **headRef, node **tailRef, int numBef, int newNum);
-void insertAft(node **headRef, node **tailRef, int numAft, int newNum);
-void deleteNum(node **headRef, node **tailRef, int target);
-void swapNum(node **headRef, node **tailRef, int num1, int num2);
-void onlyNum(node **headRef, node **tailRef, int num);
-void maxNum(node **headRef);
-void minNum(node **headRef);
-void avg(node **headRef);
-void sum(node **headRef);
-void bbSort(node **headRef, node **tailRef);
-int main(){
-    node *head=NULL;
-    node *tail=NULL;
-    node **headR=&head;
-    node **tailR=&tail;
-    int i;
-    for(i=0;i<=5;i++){
-        addFirst(headR, tailR, i);
-    }
-    showHT(headR, tailR);
+
+// Constructor: Builds a heap from a given array a[] of given size
+MinHeap::MinHeap(int cap)
+{
+	heap_size = 0;
+	capacity = cap;
+	harr = new int[cap];
 }
-void connectNode(node *node1, node *node2){
-    node1->next=node2;
-    node2->prec=node1;
+
+// Inserts a new key 'k'
+void MinHeap::insertKey(int k)
+{
+	if (heap_size == capacity)
+	{
+		cout << "\nOverflow: Could not insertKey\n";
+		return;
+	}
+
+	// First insert the new key at the end
+	heap_size++;
+	int i = heap_size - 1;
+	harr[i] = k;
+
+	// Fix the min heap property if it is violated
+	while (i != 0 && harr[parent(i)] > harr[i])
+	{
+	swap(&harr[i], &harr[parent(i)]);
+	i = parent(i);
+	}
 }
-bool isSameNum(node **headRef, int numCheck){
-        // True --> Same number.
-        // False --> Not same number.
-    bool status=false;
-    node *checkNode=*headRef;
-    while(checkNode!=NULL){
-        if(checkNode->num==numCheck){
-            status=true;
-            break;
-        }
-        else{
-            checkNode=checkNode->next;
-        }
-    }
-    return status;
+
+// Decreases value of key at index 'i' to new_val. It is assumed that
+// new_val is smaller than harr[i].
+void MinHeap::decreaseKey(int i, int new_val)
+{
+	harr[i] = new_val;
+	while (i != 0 && harr[parent(i)] > harr[i])
+	{
+	swap(&harr[i], &harr[parent(i)]);
+	i = parent(i);
+	}
 }
-void addFirst(node **headRef, node **tailRef, int newNum){
-    if(!isSameNum(headRef, newNum)){
-        node *newNode=new node();
-        newNode->num=newNum;
-        if((*headRef==NULL)&&(*tailRef==NULL)){
-            *headRef=newNode;
-            *tailRef=newNode;
-        }
-        else{
-            connectNode(newNode, *headRef);
-            *headRef=newNode;
-        }
-        info.amount++;
-    }
-    else if(isSameNum(headRef, newNum)){
-        cout<<newNum<<" is already exist."<<endl;
-    }
+
+// Method to remove minimum element (or root) from min heap
+int MinHeap::extractMin()
+{
+	if (heap_size <= 0)
+		return INT_MAX;
+	if (heap_size == 1)
+	{
+		heap_size--;
+		return harr[0];
+	}
+
+	// Store the minimum value, and remove it from heap
+	int root = harr[0];
+	harr[0] = harr[heap_size-1];
+	heap_size--;
+	MinHeapify(0);
+
+	return root;
 }
-void addLast(node **headRef, node **tailRef, int newNum){
-    if(!isSameNum(headRef, newNum)){
-        node *newNode=new node();
-        newNode->num=newNum;
-        if((*headRef==NULL)&&(*tailRef==NULL)){
-            *headRef=newNode;
-            *tailRef=newNode;
-        }
-        else{
-            connectNode(*tailRef, newNode);
-            *tailRef=newNode;
-        }
-        info.amount++;
-    }
-    else if(isSameNum(headRef, newNum)){
-        cout<<newNum<<" is already exist."<<endl;
-    }
+
+
+// This function deletes key at index i. It first reduced value to minus
+// infinite, then calls extractMin()
+void MinHeap::deleteKey(int i)
+{
+	decreaseKey(i, INT_MIN);
+	extractMin();
 }
-void showHT(node **headRef, node **tailRef){
-    node *startNode=*headRef;
-    node *endNode=*tailRef;
-    cout<<endl<<"Head --> Tail."<<endl;
-    while(startNode!=NULL){
-        cout<<startNode->num<<" ";
-        startNode=startNode->next;
-    }
-    cout<<endl<<endl<<"Tail --> Head."<<endl;
-    while(endNode!=NULL){
-        cout<<endNode->num<<" ";
-        endNode=endNode->prec;
-    }
-    cout<<endl<<"_______________________"<<endl;
+
+// A recursive method to heapify a subtree with the root at given index
+// This method assumes that the subtrees are already heapified
+void MinHeap::MinHeapify(int i)
+{
+	int l = left(i);
+	int r = right(i);
+	int smallest = i;
+	if (l < heap_size && harr[l] < harr[i])
+		smallest = l;
+	if (r < heap_size && harr[r] < harr[smallest])
+		smallest = r;
+	if (smallest != i)
+	{
+		swap(&harr[i], &harr[smallest]);
+		MinHeapify(smallest);
+	}
 }
-node *findNum(node **headRef, node **tailRef, int target){
-    nullNode->num=-1;
-    node *currNode=*headRef;
-    while(currNode!=NULL){
-        if(currNode->num==target){
-            break;
-        }
-        else if(currNode->num!=target){
-            currNode=currNode->next;
-            if(currNode==NULL){
-                currNode=nullNode;
-                break;
-            }
-        }
-    }
-    return currNode;
+
+// A utility function to swap two elements
+void swap(int *x, int *y)
+{
+	int temp = *x;
+	*x = *y;
+	*y = temp;
 }
-void insertBef(node **headRef, node **tailRef, int numBef, int newNum){
-    if(!isSameNum(headRef, newNum)){
-        node *befNode=findNum(headRef, tailRef, numBef);
-        if(befNode->num!=-1){
-            node *newNode=new node();
-            newNode->num=newNum;
-            if(befNode==*headRef){
-                connectNode(newNode, *headRef);
-                *headRef=newNode;
-            }
-            else if(befNode!=*headRef){
-                node *precBef=befNode->prec;
-                connectNode(newNode, befNode);
-                connectNode(precBef, newNode);
-            }
-            info.amount++;
-        }
-        else if(befNode->num==-1){
-            cout<<"Can't find number "<<numBef<<"."<<endl;
-        }
-    }
-    else if(isSameNum(headRef, newNum)){
-        cout<<newNum<<" is already exist."<<endl;
-    }
-}
-void insertAft(node **headRef, node **tailRef, int numAft, int newNum){
-    if(!isSameNum(headRef, newNum)){
-        node *aftNode=findNum(headRef, tailRef, numAft);
-        if(aftNode->num!=-1){
-            node *newNode=new node();
-            newNode->num=newNum;
-            if(aftNode==*tailRef){
-                connectNode(*tailRef, newNode);
-                *tailRef=newNode;
-            }
-            else if(aftNode!=*tailRef){
-                node *nextAft=aftNode->next;
-                connectNode(newNode, nextAft);
-                connectNode(aftNode, newNode);
-            }
-            info.amount++;
-        }
-        else if(aftNode->num==-1){
-            cout<<"Can't find number "<<numAft<<"."<<endl;
-        }
-    }
-    else if(isSameNum(headRef, newNum)){
-        cout<<newNum<<" is already exist."<<endl;
-    }
-}
-void deleteNum(node **headRef, node **tailRef, int target){
-    node *delNode=findNum(headRef, tailRef, target);
-    if(delNode->num==-1){
-        cout<<"Can't delete "<<target<<"."<<endl;
-    }
-    else if(delNode->num!=-1){
-        if(delNode==*headRef){
-            *headRef=(*headRef)->next;
-            (*headRef)->prec=NULL;
-            delNode->next=NULL;
-        }
-        else if(delNode==*tailRef){
-            *tailRef=(*tailRef)->prec;
-            (*tailRef)->next=NULL;
-            delNode->prec=NULL;
-        }
-        else if((delNode!=*headRef)&&(delNode!=*tailRef)){
-            node *befDel=findNum(headRef, tailRef, target)->prec;
-            node *nextDel=findNum(headRef, tailRef, target)->next;
-            connectNode(befDel, nextDel);
-            delNode->prec=NULL;
-            delNode->next=NULL;
-        }
-        info.amount--;
-    }
-}
-void swapNum(node **headRef, node **tailRef, int num1, int num2){
-    node *node1=findNum(headRef, tailRef, num1);
-    node *node2=findNum(headRef, tailRef, num2);
-    node *temp=new node();
-    temp->num=node1->num;
-    node1->num=node2->num;
-    node2->num=temp->num;
-}
-void onlyNum(node **headRef, node **tailRef, int num){
-    node *nodeRem=findNum(headRef, tailRef, num);
-    if(nodeRem->num!=-1){
-        node *precNode=findNum(headRef, tailRef, num)->prec;
-        node *nextNode=findNum(headRef, tailRef, num)->next;
-        if(nodeRem==*headRef){
-            *tailRef=nodeRem;
-            nextNode->prec=NULL;
-            nodeRem->next=NULL;
-        }
-        else if(nodeRem==*tailRef){
-            *headRef=nodeRem;
-            precNode->next=NULL;
-            nodeRem->prec=NULL;
-        }
-        else if((nodeRem!=*headRef)&&(nodeRem!=*tailRef)){
-            *headRef=nodeRem;
-            *tailRef=nodeRem;
-            precNode->next=NULL;
-            nextNode->prec=NULL;
-            nodeRem->prec=NULL;
-            nodeRem->next=NULL;
-        }
-        else if((nodeRem==*headRef)&&(nodeRem==*tailRef)){
-            cout<<"Already has 1 node."<<endl;
-        }
-        info.amount=1;
-    }
-    else if(nodeRem->num==-1){
-        cout<<"Can't find number "<<num<<"."<<endl;
-    }
-}
-void maxNum(node **headRef){
-    if(*headRef!=NULL){
-        node *maxNode=*headRef;
-        node *currNode=*headRef;
-        while(currNode!=NULL){
-            if(maxNode->num<currNode->num){
-                maxNode=currNode;
-            }
-            else{
-                currNode=currNode->next;
-            }
-        }
-        info.max=maxNode->num;
-    }
-    else if(*headRef==NULL){
-        cout<<"Head is empty."<<endl;
-    }
-}
-void minNum(node **headRef){
-    if(*headRef!=NULL){
-        node *minNode=*headRef;
-        node *currNode=*headRef;
-        while(currNode!=NULL){
-            if(minNode->num>currNode->num){
-                minNode=currNode;
-            }
-            else{
-                currNode=currNode->next;
-            }
-        }
-        info.min=minNode->num;
-    }
-    else if(*headRef==NULL){
-        cout<<"Head is empty."<<endl;
-    }
-}
-void avg(node **headRef){
-    info.avg=info.sum/info.amount;
-}
-void sum(node **headRef){
-    node *currNode=*headRef;
-    while(currNode!=NULL){
-        info.sum=info.sum+currNode->num;
-        currNode=currNode->next;
-    }
-}
-void bbSort(node **headRef, node **tailRef){
-    int i, j;
-    node *currNode=*headRef;
-    for(i=info.amount;i>0;i--){
-        for(j=0;j<i;j++){
-            if(currNode->num>currNode->next->num){
-                swapNum(headRef, tailRef, currNode->num, currNode->next->num);
-            }
-        }
-    }
+
+// Driver program to test above functions
+int main()
+{
+	MinHeap h(11);
+	h.insertKey(3);
+	h.insertKey(2);
+	h.deleteKey(1);
+	h.insertKey(15);
+	h.insertKey(5);
+	h.insertKey(4);
+	h.insertKey(45);
+	cout << h.extractMin() << " ";
+	cout << h.getMin() << " ";
+	h.decreaseKey(2, 1);
+	cout << h.getMin();
+	return 0;
 }
