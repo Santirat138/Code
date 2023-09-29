@@ -1,159 +1,135 @@
-// A C++ program to demonstrate common Binary Heap Operations
-#include<iostream>
-#include<climits>
+#include <bits/stdc++.h>
 using namespace std;
 
-// Prototype of a utility function to swap two integers
-void swap(int *x, int *y);
+class BST {
+    int data;
+    BST *left, *right;
 
-// A class for Min Heap
-class MinHeap
-{
-	int *harr; // pointer to array of elements in heap
-	int capacity; // maximum possible size of min heap
-	int heap_size; // Current number of elements in min heap
 public:
-	// Constructor
-	MinHeap(int capacity);
+    BST();
+    BST(int);
+    BST* Insert(BST*, int);
 
-	// to heapify a subtree with the root at given index
-	void MinHeapify(int );
+    BST* Search(BST*, int);
 
-	int parent(int i) { return (i-1)/2; }
-
-	// to get index of left child of node at index i
-	int left(int i) { return (2*i + 1); }
-
-	// to get index of right child of node at index i
-	int right(int i) { return (2*i + 2); }
-
-	// to extract the root which is the minimum element
-	int extractMin();
-
-	// Decreases key value of key at index i to new_val
-	void decreaseKey(int i, int new_val);
-
-	// Returns the minimum key (key at root) from min heap
-	int getMin() { return harr[0]; }
-
-	// Deletes a key stored at index i
-	void deleteKey(int i);
-
-	// Inserts a new key 'k'
-	void insertKey(int k);
+    BST* Delete(BST*, int);
+    void Inorder(BST*);
 };
-
-// Constructor: Builds a heap from a given array a[] of given size
-MinHeap::MinHeap(int cap)
+BST::BST()
+        : data(0)
+        , left(NULL)
+        , right(NULL)
 {
-	heap_size = 0;
-	capacity = cap;
-	harr = new int[cap];
+}
+BST::BST(int value)
+{
+    data = value;
+    left = right = NULL;
+}
+BST* BST::Insert(BST* root, int value)
+{
+    if (!root) { // if (root == NULL)
+        return new BST(value);
+    }
+    if (value > root->data) {
+        root->right = Insert(root->right, value);
+    }
+    else if (value < root->data) {
+        root->left = Insert(root->left, value);
+    }
+    return root;
 }
 
-// Inserts a new key 'k'
-void MinHeap::insertKey(int k)
-{
-	if (heap_size == capacity)
-	{
-		cout << "\nOverflow: Could not insertKey\n";
-		return;
-	}
+BST* BST::Search(BST* root, int value){
+    if (!root){ // return NULL means NOT FOUND
+        return root;
+    }
 
-	// First insert the new key at the end
-	heap_size++;
-	int i = heap_size - 1;
-	harr[i] = k;
-
-	// Fix the min heap property if it is violated
-	while (i != 0 && harr[parent(i)] > harr[i])
-	{
-	swap(&harr[i], &harr[parent(i)]);
-	i = parent(i);
-	}
+    if (value == root->data){
+        return root;
+    }
+    else if (value > root->data) {
+        return Search(root->right, value);
+    }
+    else if (value < root->data) {
+        return Search(root->left, value);
+    }
 }
-
-// Decreases value of key at index 'i' to new_val. It is assumed that
-// new_val is smaller than harr[i].
-void MinHeap::decreaseKey(int i, int new_val)
+void BST::Inorder(BST* root)
 {
-	harr[i] = new_val;
-	while (i != 0 && harr[parent(i)] > harr[i])
-	{
-	swap(&harr[i], &harr[parent(i)]);
-	i = parent(i);
-	}
-}
-
-// Method to remove minimum element (or root) from min heap
-int MinHeap::extractMin()
-{
-	if (heap_size <= 0)
-		return INT_MAX;
-	if (heap_size == 1)
-	{
-		heap_size--;
-		return harr[0];
-	}
-
-	// Store the minimum value, and remove it from heap
-	int root = harr[0];
-	harr[0] = harr[heap_size-1];
-	heap_size--;
-	MinHeapify(0);
-
-	return root;
+    if (!root) {
+        return;
+    }
+    Inorder(root->left);
+    cout << root->data << " ";
+    Inorder(root->right);
 }
 
 
-// This function deletes key at index i. It first reduced value to minus
-// infinite, then calls extractMin()
-void MinHeap::deleteKey(int i)
+BST* BST::Delete(BST* root, int k)
 {
-	decreaseKey(i, INT_MIN);
-	extractMin();
+    if (root == NULL)
+        return root;
+    if (k < root->data) {
+        root->left = Delete(root->left, k);
+        return root;
+    }
+    else if (k > root->data) {
+        root->right = Delete(root->right, k);
+        return root;
+    }
+    if (root->left == NULL) {
+        BST* temp = root->right;
+        delete root;
+        return temp;
+    }
+    else if (root->right == NULL) {
+        BST* temp = root->left;
+        delete root;
+        return temp;
+    }
+    else {
+
+        BST* succParent = root;
+        BST* succ = root->right;
+        while (succ->left != NULL) {
+            succParent = succ;
+            succ = succ->left;
+        }
+        if (succParent != root)
+            succParent->left = succ->right;
+        else
+            succParent->right = succ->right;
+        root->data = succ->data;
+        delete succ;
+        return root;
+    }
 }
 
-// A recursive method to heapify a subtree with the root at given index
-// This method assumes that the subtrees are already heapified
-void MinHeap::MinHeapify(int i)
-{
-	int l = left(i);
-	int r = right(i);
-	int smallest = i;
-	if (l < heap_size && harr[l] < harr[i])
-		smallest = l;
-	if (r < heap_size && harr[r] < harr[smallest])
-		smallest = r;
-	if (smallest != i)
-	{
-		swap(&harr[i], &harr[smallest]);
-		MinHeapify(smallest);
-	}
-}
-
-// A utility function to swap two elements
-void swap(int *x, int *y)
-{
-	int temp = *x;
-	*x = *y;
-	*y = temp;
-}
-
-// Driver program to test above functions
 int main()
 {
-	MinHeap h(11);
-	h.insertKey(3);
-	h.insertKey(2);
-	h.deleteKey(1);
-	h.insertKey(15);
-	h.insertKey(5);
-	h.insertKey(4);
-	h.insertKey(45);
-	cout << h.extractMin() << " ";
-	cout << h.getMin() << " ";
-	h.decreaseKey(2, 1);
-	cout << h.getMin();
-	return 0;
+    BST b, *root = NULL;
+    root = b.Insert(root, 50);
+    b.Insert(root, 30);
+    b.Insert(root, 20);
+    b.Insert(root, 40);
+    b.Insert(root, 70);
+    b.Insert(root, 60);
+    b.Insert(root, 80);
+
+    b.Inorder(root); // Show from min to max
+    cout << endl;
+
+    b.Delete(root, 40);
+    b.Inorder(root);
+    cout << endl;
+
+    b.Delete(root, 80);
+    b.Inorder(root);
+    cout << endl;
+
+    b.Delete(root, 90);
+    b.Inorder(root);
+    cout << endl;
+    return 0;
 }
