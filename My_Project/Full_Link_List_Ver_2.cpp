@@ -1,16 +1,16 @@
+// Class node link-list
 #include<iostream>
 using namespace std;
 class node{
     public:
         int num;
-        node *prev;
         node *next;
+        node(int numIn){
+            num=numIn;
+            next=NULL;
+        }
 };
 
 int main(){
-    node *head=NULL;
-    node **headR=&head;
-    node *tail=NULL;
-    node **tailR=&tail;
-    
+
 }
