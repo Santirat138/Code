@@ -24,6 +24,7 @@ class linkList{
         void addFirst(int newNum);
         void show();
         node *findNum(int target);
+        void deleteNum(int target);
 };
 linkList::linkList(){
     headRef=&head;
@@ -84,21 +85,51 @@ node *linkList::findNum(int target){
     if(*headRef!=NULL){
         currNode=*headRef;
         while(currNode!=NULL){
-            if(currNode->num==target){
-                break;
+            if(currNode->next!=NULL){
+                if(currNode->num==target){
+                    break;
+                }
+                else{
+                    currNode=currNode->next;
+                }
             }
-            else{
-                currNode=currNode->next;
+            else if(currNode->next==NULL){
+                cout<<"Not found."<<endl;
+                return nullNode;
             }
         }
-        cout<<"Not found."<<endl;
-        return nullNode;
     }
     else{
-        cout<<"Head is NULL."<<endl;
+        cout<<"Error."<<endl;
         return nullNode;
     }
     return currNode;
+}
+void linkList::deleteNum(int target){
+    node *targetNode=findNum(target);
+    if(targetNode->num!=-1){
+        if(targetNode==*headRef){
+            *headRef=targetNode->next;
+            (*headRef)->prev=NULL;
+            targetNode->next=NULL;
+        }
+        else if(targetNode==*tailRef){
+            *tailRef=targetNode->prev;
+            (*tailRef)->next=NULL;
+            targetNode->prev=NULL;
+        }
+        else if((targetNode!=*headRef)&&(targetNode!=*tailRef)){
+            node *pTemp=targetNode->prev;
+            node *nTemp=targetNode->next;
+            targetNode->prev=NULL;
+            targetNode->next=NULL;
+            pTemp->next=nTemp;
+            nTemp->prev=pTemp;
+        }
+    }
+    else{
+        cout<<"Not found."<<endl;
+    }
 }
 /*-------------------- main --------------------*/
 int main(){
@@ -106,9 +137,8 @@ int main(){
     for(int i=0;i<6;i++){
         list1.addFirst(i);
     }
+    list1.deleteNum(3);
     list1.show();
-    node *find=list1.findNum(24);
-    cout<<find->num;
 }
 /*-------------------- main --------------------*/
 void connectNode(node *node1, node *node2){
