@@ -25,6 +25,7 @@ class linkList{
         void show();
         node *findNum(int target);
         void deleteNum(int target);
+        void swapNum(int num1, int num2);
 };
 linkList::linkList(){
     headRef=&head;
@@ -131,13 +132,25 @@ void linkList::deleteNum(int target){
         cout<<"Not found."<<endl;
     }
 }
+void linkList::swapNum(int num1, int num2){
+    node *temp=nullNode;
+    node *node1=findNum(num1);
+    node *node2=findNum(num2);
+    if((node1!=nullNode)&&(node2!=nullNode)){
+        temp->num=node1->num;
+        node1->num=node2->num;
+        node2->num=temp->num;
+    }
+    else{
+        cout<<"Can't swap."<<endl;
+    }
+}
 /*-------------------- main --------------------*/
 int main(){
     linkList list1;
     for(int i=0;i<6;i++){
         list1.addFirst(i);
     }
-    list1.deleteNum(3);
     list1.show();
 }
 /*-------------------- main --------------------*/
