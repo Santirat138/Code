@@ -30,7 +30,7 @@ class linkList{
         node *findPos(int pos);
         void insertAt(int newNum, int numAft, int numBef);
         void insertPos(int newNum, int posAft, int posBef);
-        
+        void deletePos(int delPos);
 };
 linkList::linkList(){
     headRef=&head;
@@ -204,19 +204,28 @@ void linkList::insertPos(int newNum, int posAft, int posBef){
             node *nodeWalk=*headRef;
             node *nodeAft;
             node *nodeBef;
-            while(nodeWalk!=NULL){
-                if(walk<posAft){
-                    nodeWalk=nodeWalk->next;
-                    walk++;
+            if((posBef-posAft==1)&&(posAft>0)&&(posBef<=amount)){
+                while(nodeWalk!=NULL){
+                    if(walk<posAft){
+                        nodeWalk=nodeWalk->next;
+                        walk++;
+                    }
+                    else if(walk==posAft){
+                        nodeAft=nodeWalk->prev;
+                        nodeBef=nodeWalk;
+                        connectNode(newNode, nodeBef);
+                        connectNode(nodeAft, newNode);
+                        amount++;
+                        break;
+                    }
                 }
-                else if(walk==posAft){
-                    nodeAft=nodeWalk->prev;
-                    nodeBef=nodeWalk;
-                    connectNode(newNode, nodeBef);
-                    connectNode(nodeAft, newNode);
-                    amount++;
-                    break;
-                }
+            }
+            else if(posAft<=0){
+                addFirst(newNum);
+            }
+            else if(posBef>amount){
+                connectNode(*tailRef, newNode);
+                *tailRef=newNode;
             }
         }
         else{
@@ -227,13 +236,16 @@ void linkList::insertPos(int newNum, int posAft, int posBef){
         cout<<"Can't insert."<<endl;
     }
 }
+void deletePos(int delPos){
+    
+}
 /*-------------------- main --------------------*/
 int main(){
     linkList list1;
     for(int i=0;i<6;i++){
         list1.addFirst(i);
     }
-    list1.insertPos(100, 5, 6);
+    list1.insertPos(100, 0, 1);
     list1.show();
 }
 /*-------------------- main --------------------*/
