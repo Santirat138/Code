@@ -15,6 +15,7 @@ node *nullNode=new node(-1);
 void connectNode(node *node1, node *node2);
 class linkList{
     public:
+        int amount=0;
         node *head=NULL;
         node *tail=NULL;
         node **headRef;
@@ -26,6 +27,10 @@ class linkList{
         node *findNum(int target);
         void deleteNum(int target);
         void swapNum(int num1, int num2);
+        node *findPos(int pos);
+        void insertAt(int newNum, int numAft, int numBef);
+        void insertPos(int newNum, int posAft, int posBef);
+        
 };
 linkList::linkList(){
     headRef=&head;
@@ -65,6 +70,7 @@ void linkList::addFirst(int newNum){
             cout<<"Same number."<<endl;
         }
     }
+    amount++;
 }
 void linkList::show(){
     node *currNode=*headRef;
@@ -127,6 +133,7 @@ void linkList::deleteNum(int target){
             pTemp->next=nTemp;
             nTemp->prev=pTemp;
         }
+        amount--;
     }
     else{
         cout<<"Not found."<<endl;
@@ -145,12 +152,88 @@ void linkList::swapNum(int num1, int num2){
         cout<<"Can't swap."<<endl;
     }
 }
+node *linkList::findPos(int pos){
+    if(*headRef!=NULL){
+        if((pos<=amount)&&(pos>0)){
+            node *currNode=*headRef;
+            int walk=0;
+            while(walk!=pos-1){
+                currNode=currNode->next;
+                walk++;
+            }
+            return currNode;
+        }
+        else{
+            cout<<"Error"<<endl;
+        }
+    }
+    else{
+        cout<<"Error."<<endl;
+    }
+    return nullNode;
+}
+void linkList::insertAt(int newNum, int numAft, int numBef){
+    if((*headRef!=NULL)&&(*headRef!=*tailRef)){
+        node *nodeAft=findNum(numAft);
+        node *nodeBef=findNum(numBef);
+        if(sameNum(newNum)==false){
+            node *newNode=new node(newNum);
+            if(nodeAft->next==nodeBef){
+                connectNode(nodeAft, newNode);
+                connectNode(newNode, nodeBef);
+            }
+            else{
+                cout<<"Can't insert."<<endl;
+            }
+        }
+        else{
+            cout<<"Same number."<<endl;
+        }
+    }
+    else{
+        cout<<"Can't insert."<<endl;
+    }
+}
+void linkList::insertPos(int newNum, int posAft, int posBef){
+    // If pos<0 --> add first.
+    // If pos>amount --> add last.
+    if((*headRef!=NULL)&&(*headRef!=*tailRef)){
+        if((sameNum(newNum)==false)&&(posBef-posAft==1)){
+            int walk=0;
+            node *newNode=new node(newNum);
+            node *nodeWalk=*headRef;
+            node *nodeAft;
+            node *nodeBef;
+            while(nodeWalk!=NULL){
+                if(walk<posAft){
+                    nodeWalk=nodeWalk->next;
+                    walk++;
+                }
+                else if(walk==posAft){
+                    nodeAft=nodeWalk->prev;
+                    nodeBef=nodeWalk;
+                    connectNode(newNode, nodeBef);
+                    connectNode(nodeAft, newNode);
+                    amount++;
+                    break;
+                }
+            }
+        }
+        else{
+            cout<<"Can't insert."<<endl;
+        }
+    }
+    else{
+        cout<<"Can't insert."<<endl;
+    }
+}
 /*-------------------- main --------------------*/
 int main(){
     linkList list1;
     for(int i=0;i<6;i++){
         list1.addFirst(i);
     }
+    list1.insertPos(100, 5, 6);
     list1.show();
 }
 /*-------------------- main --------------------*/
