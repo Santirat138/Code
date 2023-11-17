@@ -198,7 +198,7 @@ void linkList::insertPos(int newNum, int posAft, int posBef){
     // If pos<0 --> add first.
     // If pos>amount --> add last.
     if((*headRef!=NULL)&&(*headRef!=*tailRef)){
-        if((sameNum(newNum)==false)&&(posBef-posAft==1)){
+        if(sameNum(newNum)==false){
             int walk=0;
             node *newNode=new node(newNum);
             node *nodeWalk=*headRef;
