@@ -237,6 +237,7 @@ void linkList::insertPos(int newNum, int posAft, int posBef){
     }
 }
 void deletePos(int delPos){
+    node *delNode=findPos(delPos);
     
 }
 /*-------------------- main --------------------*/
