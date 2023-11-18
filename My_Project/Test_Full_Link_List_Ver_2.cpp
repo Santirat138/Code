@@ -195,7 +195,7 @@ void linkList::insertAt(int newNum, int numAft, int numBef){
     }
 }
 void linkList::insertPos(int newNum, int posAft, int posBef){
-    // If pos<0 --> add first.
+    // If pos<=0 --> add first.
     // If pos>amount --> add last.
     if((*headRef!=NULL)&&(*headRef!=*tailRef)){
         if(sameNum(newNum)==false){
@@ -236,9 +236,16 @@ void linkList::insertPos(int newNum, int posAft, int posBef){
         cout<<"Can't insert."<<endl;
     }
 }
-void deletePos(int delPos){
+void linkList::deletePos(int delPos){
+    // If delPos<=0 --> delete first.
+    // If delPos>amount --> delete last.
     node *delNode=findPos(delPos);
-    
+    if(delNode!=nullNode){
+        
+    }
+    else{
+        cout<<"Can't delete."<<endl;
+    }
 }
 /*-------------------- main --------------------*/
 int main(){
