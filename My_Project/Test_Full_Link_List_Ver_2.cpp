@@ -31,6 +31,8 @@ class linkList{
         void insertAt(int newNum, int numAft, int numBef);
         void insertPos(int newNum, int posAft, int posBef);
         void deletePos(int delPos);
+        void swapPos(int pos1, int pos2);
+        void bbSort();
 };
 linkList::linkList(){
     headRef=&head;
@@ -237,14 +239,79 @@ void linkList::insertPos(int newNum, int posAft, int posBef){
     }
 }
 void linkList::deletePos(int delPos){
-    // If delPos<=0 --> delete first.
-    // If delPos>amount --> delete last.
-    node *delNode=findPos(delPos);
-    if(delNode!=nullNode){
-        
+    if((*headRef!=NULL)&&(*tailRef!=NULL)){
+        node *delNode=findPos(delPos);
+        node *nodePrev;
+        node *nodeNext;
+        if(delNode!=nullNode){
+            if((delPos>0)&&(delPos<=amount)){
+                if(delNode==*headRef){
+                    nodeNext=(*headRef)->next;
+                    *headRef=nodeNext;
+                    (*headRef)->prev=NULL;
+                    delNode->next=NULL;
+                }
+                else if(delNode==*tailRef){
+                    nodePrev=(*tailRef)->prev;
+                    *tailRef=nodePrev;
+                    (*tailRef)->next=NULL;
+                    delNode->prev=NULL;
+                }
+                else if((delNode!=*headRef)&&(delNode!=*tailRef)){
+                    nodePrev=delNode->prev;
+                    nodeNext=delNode->next;
+                    connectNode(nodePrev, nodeNext);
+                    delNode->prev=NULL;
+                    delNode->next=NULL;
+                }
+            }
+            else if(delPos<=0){
+                nodeNext=(*headRef)->next;
+                *headRef=nodeNext;
+                (*headRef)->prev=NULL;
+                delNode->next=NULL;
+            }
+            else if(delPos>amount){
+                nodePrev=(*tailRef)->prev;
+                *tailRef=nodePrev;
+                (*tailRef)->next=NULL;
+                delNode->prev=NULL;
+            }
+        }
+        else{
+            cout<<"Can't delete."<<endl;
+        }
     }
     else{
         cout<<"Can't delete."<<endl;
+    }
+}
+void linkList::swapPos(int pos1, int pos2){
+    node *temp=new node(-1);
+    if((pos1>0)&&(pos2<=amount)){
+        node *node1=findPos(pos1);
+        node *node2=findPos(pos2);
+        if((node1!=NULL)&&(node2!=NULL)){
+            temp->num=node1->num;
+            node1->num=node2->num;
+            node2->num=temp->num;
+        }
+        else{
+            cout<<"Can't swap."<<endl;
+        }
+    }
+    else{
+        cout<<"Can't swap."<<endl;
+    }
+}
+void linkList::bbSort(){
+    if((*headRef!=NULL)&&(*tailRef!=NULL)){
+        node *currNode=*headRef;
+        node *order=*tailRef;
+        
+    }
+    else{
+        cout<<"Can't sort."<<endl;
     }
 }
 /*-------------------- main --------------------*/
@@ -253,7 +320,6 @@ int main(){
     for(int i=0;i<6;i++){
         list1.addFirst(i);
     }
-    list1.insertPos(100, 0, 1);
     list1.show();
 }
 /*-------------------- main --------------------*/
